@@ -4,7 +4,6 @@ namespace SHMS.DTOs
 {
     public class HotelDTO
     {
-        public int HotelID { get; set; }
 
         [Required]
         [StringLength(200)]
@@ -13,6 +12,8 @@ namespace SHMS.DTOs
         [Required]
         [StringLength(500)]
         public string Location { get; set; }
+        [Required]
+        public int ManagerID { get; set; }
 
         [StringLength(200)]
         public string? Amenities { get; set; }

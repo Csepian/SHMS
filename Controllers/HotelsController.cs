@@ -81,9 +81,10 @@ namespace SHMS.Controllers
         {
             var hotel = new Hotel
             {
-                HotelID = hoteldto.HotelID,
+
                 Name = hoteldto.Name,
                 Location = hoteldto.Location,
+                ManagerID = hoteldto.ManagerID,
                 Amenities = hoteldto.Amenities,
                 Rating = hoteldto.Rating
 
