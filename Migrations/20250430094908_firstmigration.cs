@@ -107,7 +107,7 @@ namespace SHMS.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    BookingID = table.Column<int>(type: "int", nullable: false),
+                    BookingID = table.Column<int>(type: "int", nullable: false).Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     RoomID = table.Column<int>(type: "int", nullable: false),
                     CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -124,8 +124,8 @@ namespace SHMS.Migrations
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_Users_BookingID",
-                        column: x => x.BookingID,
+                        name: "FK_Bookings_Users_UserID",
+                        column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);

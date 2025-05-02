@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SHMS.Data;
+using SHMS.DTOs;
 using SHMS.Model;
 using SHMS.Repositories;
 using SHMS.Services;
@@ -76,8 +77,17 @@ namespace SHMS.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<Hotel>> PostHotel(HotelDTO hoteldto)
         {
+            var hotel = new Hotel
+            {
+                HotelID = hoteldto.HotelID,
+                Name = hoteldto.Name,
+                Location = hoteldto.Location,
+                Amenities = hoteldto.Amenities,
+                Rating = hoteldto.Rating
+
+            };
             await _hotelservice.AddHotelAsync(hotel);
             return CreatedAtAction(nameof(GetHotelByID), new { id = hotel.HotelID }, hotel);
         }

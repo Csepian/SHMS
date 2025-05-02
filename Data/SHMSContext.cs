@@ -38,7 +38,7 @@ namespace SHMS.Data
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)
                 .WithMany(c =>c.Bookings)
-                .HasForeignKey(b => b.BookingID)
+                .HasForeignKey(b => b.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure one-to-many relationship between Payment and User
