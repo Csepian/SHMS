@@ -124,8 +124,8 @@ namespace SHMS.Migrations
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_Users_BookingID",
-                        column: x => x.BookingID,
+                        name: "FK_Bookings_Users_UserID",
+                        column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
