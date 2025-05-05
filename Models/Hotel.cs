@@ -18,7 +18,7 @@ namespace SHMS.Model
         public int? ManagerID { get; set; }
         [StringLength(200)]
         public string? Amenities { get; set; }
-        public decimal? Rating { get; set; }
+        public double? Rating { get; set; }
         public ICollection<Room> Rooms { get; set; }
         public ICollection<Review> Reviews { get; set; }
         

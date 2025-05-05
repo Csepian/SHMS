@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IHotel, HotelServices>();
 builder.Services.AddScoped<IRoom, RoomServices>();
 builder.Services.AddScoped<IReview, ReviewServices>();
+builder.Services.AddScoped<IBooking, BookingService>();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
