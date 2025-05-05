@@ -15,10 +15,10 @@ namespace SHMS.Model
         [StringLength(500)]
         public string Location { get; set; }
         [Required]
-        public int ManagerID { get; set; }
+        public int? ManagerID { get; set; }
         [StringLength(200)]
         public string? Amenities { get; set; }
-        public double? Rating { get; set; }
+        public decimal? Rating { get; set; }
         public ICollection<Room> Rooms { get; set; }
         public ICollection<Review> Reviews { get; set; }
         

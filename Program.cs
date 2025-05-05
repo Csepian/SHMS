@@ -12,8 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IHotel, HotelService>();
+builder.Services.AddScoped<IHotel, HotelServices>();
 builder.Services.AddScoped<IRoom, RoomServices>();
+builder.Services.AddScoped<IReview, ReviewServices>();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

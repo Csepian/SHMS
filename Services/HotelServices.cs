@@ -5,10 +5,10 @@ using SHMS.Repositories;
 
 namespace SHMS.Services
 {
-    public class HotelService : IHotel
+    public class HotelServices : IHotel
     {
         private readonly SHMSContext _context;
-        public HotelService(SHMSContext context)
+        public HotelServices(SHMSContext context)
         {
             _context = context;
         }

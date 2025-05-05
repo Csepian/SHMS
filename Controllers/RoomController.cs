@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SHMS.DTO;
+using SHMS.DTOs;
 using SHMS.Model;
 using SHMS.Repositories;
 
@@ -41,8 +43,18 @@ namespace SHMS.Controllers
 
         // POST: api/Rooms
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<Room>> PostRoom(RoomDTO roomdto)
         {
+            var room = new Room
+            {
+
+                HotelID = roomdto.HotelID,
+                Type = roomdto.Type,
+                Price = roomdto.Price,
+                Availability = roomdto.Availability,
+                Features = roomdto.Features
+
+            };
             await _roomService.AddRoomAsync(room);
             return CreatedAtAction(nameof(GetRoomById), new { id = room.RoomID }, room);
         }
