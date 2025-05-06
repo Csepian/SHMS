@@ -16,7 +16,7 @@ namespace SHMS.Model
         [Required]
         public DateTime CheckOutDate { get; set; }
         [Required]
-        public string Status { get; set; }
+        public string? Status { get; set; } = "NotBooked";
 
         //Navigation Properties
         [ForeignKey("UserID")]

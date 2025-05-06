@@ -68,11 +68,7 @@ namespace SHMS.Services
 
         public async Task UpdateBookingAsync(Booking booking)
         {
-            if (!await IsRoomAvailableAsync(booking.RoomID, booking.CheckInDate, booking.CheckOutDate))
-            {
-                throw new InvalidOperationException("The room is already booked for the selected dates.");
-            }
-
+            
             _context.Entry(booking).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IBooking, BookingServices>();
+builder.Services.AddScoped<IBooking, BookingService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

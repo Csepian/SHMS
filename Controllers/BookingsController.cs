@@ -62,7 +62,8 @@ namespace SHMS.Controllers
         {
             try
             {
-                var booking = new Booking
+               var booking = new Booking
+
                 {
                     UserID = bookingdto.UserID,
                     RoomID = bookingdto.RoomID,
@@ -70,8 +71,12 @@ namespace SHMS.Controllers
                     CheckOutDate = bookingdto.CheckOutDate,
                   
                 };
-                await _bookingService.AddBookingAsync(booking);
-                return CreatedAtAction(nameof(GetBookingById), new { id = booking.BookingID }, booking);
+               
+                    await _bookingService.AddBookingAsync(booking);
+                    return CreatedAtAction(nameof(GetBookingById), new { id = booking.BookingID }, booking);
+                
+                       
+               
             }
             catch (InvalidOperationException ex)
             {
