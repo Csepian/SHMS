@@ -15,7 +15,7 @@ namespace SHMS.Model
         [Column(TypeName = "Decimal(18,2)")]
         public Decimal Amount { get; set; }
         [Required]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = false; // Default to false
         [Required]
         [StringLength(50)]
         public string PaymentMethod { get; set; }
