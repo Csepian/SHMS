@@ -269,6 +269,7 @@ namespace SHMS.Migrations
                     b.Navigation("User");
                 });
 
+
             modelBuilder.Entity("SHMS.Model.Review", b =>
                 {
                     b.HasOne("SHMS.Model.Hotel", "Hotel")
@@ -321,6 +322,7 @@ namespace SHMS.Migrations
 
                     b.Navigation("Reviews");
                 });
+
 #pragma warning restore 612, 618
         }
     }

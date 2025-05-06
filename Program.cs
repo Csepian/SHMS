@@ -1,5 +1,10 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SHMS.Data;
+using SHMS.Model;
 using SHMS.Repository;
 using SHMS.Service;
 
@@ -16,6 +21,51 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUser, UserService>();
+builder.Services.AddScoped<ITokenGenerate, TokenService>();
+builder.Services.Configure<User>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+// Configure JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]!)),
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
+builder.Services.AddSwaggerGen(c => {
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                 {
+                     {
+                           new OpenApiSecurityScheme
+                             {
+                                 Reference = new OpenApiReference
+                                 {
+                                     Type = ReferenceType.SecurityScheme,
+                                     Id = "Bearer"
+                                 }
+                             },
+                             Array.Empty<string>()
+
+                     }
+                 });
+});
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

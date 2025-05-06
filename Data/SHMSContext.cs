@@ -63,7 +63,10 @@ namespace SHMS.Data
                 .HasForeignKey<Hotel>(b => b.ManagerID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+            modelBuilder.Entity<User>()
+        .HasQueryFilter(u => u.Role == "manager");
+
+
         }
     
 }
