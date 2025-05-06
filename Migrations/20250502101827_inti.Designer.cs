@@ -12,8 +12,8 @@ using SHMS.Data;
 namespace SHMS.Migrations
 {
     [DbContext(typeof(SHMSContext))]
-    [Migration("20250430094908_firstmigration")]
-    partial class firstmigration
+    [Migration("20250502101827_inti")]
+    partial class inti
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,10 @@ namespace SHMS.Migrations
             modelBuilder.Entity("SHMS.Model.Booking", b =>
                 {
                     b.Property<int>("BookingID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingID"));
 
                     b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
@@ -49,6 +52,8 @@ namespace SHMS.Migrations
                     b.HasKey("BookingID");
 
                     b.HasIndex("RoomID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("Bookings");
                 });
@@ -225,16 +230,16 @@ namespace SHMS.Migrations
 
             modelBuilder.Entity("SHMS.Model.Booking", b =>
                 {
-                    b.HasOne("SHMS.Model.User", "User")
-                        .WithMany("Bookings")
-                        .HasForeignKey("BookingID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SHMS.Model.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomID")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SHMS.Model.User", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Room");

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SHMS.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class inti : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -107,7 +107,8 @@ namespace SHMS.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    BookingID = table.Column<int>(type: "int", nullable: false),
+                    BookingID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     RoomID = table.Column<int>(type: "int", nullable: false),
                     CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -124,8 +125,8 @@ namespace SHMS.Migrations
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_Users_BookingID",
-                        column: x => x.BookingID,
+                        name: "FK_Bookings_Users_UserID",
+                        column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
@@ -164,6 +165,11 @@ namespace SHMS.Migrations
                 name: "IX_Bookings_RoomID",
                 table: "Bookings",
                 column: "RoomID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserID",
+                table: "Bookings",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_ManagerID",
