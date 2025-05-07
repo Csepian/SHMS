@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SHMS.Authorize;
 using SHMS.Data;
 using SHMS.Repositories;
 using SHMS.Services;
@@ -21,6 +22,8 @@ builder.Services.AddScoped<IRoom, RoomServices>();
 builder.Services.AddScoped<IReview, ReviewServices>();
 builder.Services.AddScoped<IBooking, BookingService>();
 builder.Services.AddScoped<IPayment, PaymentService>();
+builder.Services.AddScoped<ITokenGenerate, TokenService>();
+builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

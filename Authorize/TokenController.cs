@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SHMS.Data;
+using SHMS.DTO;
 using SHMS.Model;
 
 namespace SHMS.Authorize
@@ -20,7 +21,7 @@ namespace SHMS.Authorize
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(User userData)
+        public async Task<IActionResult> Post(LoginDTO userData)
         {
             if (userData != null && !string.IsNullOrEmpty(userData.Email) && !string.IsNullOrEmpty(userData.Password))
             {
