@@ -92,5 +92,17 @@ namespace SHMS.Services
                                 (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
                                 (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate)));
         }
+        public async Task<bool> CanCancelBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                return false;
+            }
+
+            // Check if the current time is at least 24 hours before the check-in date
+            var now = DateTime.UtcNow;
+            return now < booking.CheckInDate.AddHours(-24);
+        }
     }
 }

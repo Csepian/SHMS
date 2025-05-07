@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SHMS.DTOs;
 using SHMS.Model;
@@ -22,6 +23,7 @@ namespace SHMS.Controllers
 
         // GET: api/Bookings
         [HttpGet]
+        [Authorize(Roles ="admin,manager")]
         public ActionResult<IEnumerable<Booking>> GetAllBookings()
         {
             var bookings = _bookingService.GetAllBookings();
@@ -30,6 +32,7 @@ namespace SHMS.Controllers
 
         // GET: api/Bookings/Hotel/5
         [HttpGet("Hotel/{hotelId}")]
+        [Authorize(Roles = "admin,manager")]
         public ActionResult<IEnumerable<Booking>> GetBookingsByHotel(int hotelId)
         {
             var bookings = _bookingService.GetBookingsByHotel(hotelId);
@@ -38,6 +41,7 @@ namespace SHMS.Controllers
 
         // GET: api/Bookings/User/5
         [HttpGet("User/{userId}")]
+        [Authorize(Roles = "admin,manager")]
         public ActionResult<IEnumerable<Booking>> GetBookingsByUser(int userId)
         {
             var bookings = _bookingService.GetBookingsByUser(userId);
@@ -46,6 +50,7 @@ namespace SHMS.Controllers
 
         // GET: api/Bookings/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin,manager,user")]
         public async Task<ActionResult<Booking>> GetBookingById(int id)
         {
             var booking = await _bookingService.GetBookingByIdAsync(id);
@@ -58,6 +63,7 @@ namespace SHMS.Controllers
 
         // POST: api/Bookings
         [HttpPost]
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> PostBooking(BookingDto bookingdto)
         {
             try
@@ -86,6 +92,7 @@ namespace SHMS.Controllers
 
         // PUT: api/Bookings/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin,manager")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
             if (id != booking.BookingID)
@@ -107,10 +114,26 @@ namespace SHMS.Controllers
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
+
+        public async Task<IActionResult> DeleteBooking(int id, User user)
         {
-            await _bookingService.DeleteBookingAsync(id);
-            return NoContent();
+            if (user.Role == "Admin")
+            {
+                await _bookingService.DeleteBookingAsync(id);
+                return NoContent();
+            }
+            else
+            {
+                if (await _bookingService.CanCancelBookingAsync(id))
+                {
+                    await _bookingService.DeleteBookingAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest("Cannot cancel booking.");
+                }
+            }
         }
     }
 }

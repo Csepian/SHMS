@@ -13,6 +13,7 @@ namespace SHMS.Repositories
         Task UpdateBookingAsync(Booking booking);
         Task DeleteBookingAsync(int id);
         Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkInDate, DateTime checkOutDate);
+        Task<bool> CanCancelBookingAsync(int bookingId);
 
     }
 }
