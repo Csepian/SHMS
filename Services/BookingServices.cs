@@ -22,6 +22,7 @@ namespace SHMS.Services
         {
             return _context.Bookings
                 .Include(b => b.User)
+                .ThenInclude(h=>h.Hotel)
                 .Include(b => b.Room)
                 .ThenInclude(r => r.Hotel)
                 .ToList();
@@ -67,10 +68,7 @@ namespace SHMS.Services
 
         public async Task UpdateBookingAsync(Booking booking)
         {
-            if (!await IsRoomAvailableAsync(booking.RoomID, booking.CheckInDate, booking.CheckOutDate))
-            {
-                throw new InvalidOperationException("The room is already booked for the selected dates.");
-            }
+            
 
             _context.Entry(booking).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -94,6 +92,18 @@ namespace SHMS.Services
                                ((checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) ||
                                 (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
                                 (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate)));
+        }
+        public async Task<bool> CanCancelBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+            {
+                return false;
+            }
+
+            // Check if the current time is at least 24 hours before the check-in date
+            var now = DateTime.UtcNow;
+            return now < booking.CheckInDate.AddHours(-24);
         }
     }
 }

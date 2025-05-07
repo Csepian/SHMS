@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SHMS.DTO;
 using SHMS.Model;
 using SHMS.Repositories;
 
@@ -55,12 +58,34 @@ namespace SHMS.Controllers
         }
 
         // POST: api/Bookings
-        [HttpPost]
-        public async Task<IActionResult> PostBooking(Booking booking)
+        [HttpPost("{roomId}")]
+        [Authorize(Roles ="admin,user")]
+        public async Task<IActionResult> PostBooking(int roomId,BookingDTO bookingdto)
         {
             try
             {
+                // Retrieve the UserID from the authenticated user's claims
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                {
+                    return Unauthorized("User is not authenticated.");
+                }
+
+                int userId = int.Parse(userIdClaim.Value);
+
+                // Create a new booking object
+                var booking = new Booking
+                {
+                    UserID = userId, // Automatically set UserID
+                    RoomID = roomId, // Automatically set RoomID from the URL
+                    CheckInDate = bookingdto.CheckInDate,
+                    CheckOutDate = bookingdto.CheckOutDate,
+                    Status = "Unconfirmed" // Default status
+                };
+
+                // Add the booking
                 await _bookingService.AddBookingAsync(booking);
+
                 return CreatedAtAction(nameof(GetBookingById), new { id = booking.BookingID }, booking);
             }
             catch (InvalidOperationException ex)
@@ -92,10 +117,25 @@ namespace SHMS.Controllers
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
+        public async Task<IActionResult> DeleteBooking(int id,User user)
         {
-            await _bookingService.DeleteBookingAsync(id);
-            return NoContent();
+            if (user.Role == "Admin")
+            {
+                await _bookingService.DeleteBookingAsync(id);
+                return NoContent();
+            }
+            else
+            {
+                if (await _bookingService.CanCancelBookingAsync(id))
+                {
+                    await _bookingService.DeleteBookingAsync(id);
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest("Cannot cancel booking.");
+                }
+            }
         }
     }
 }
