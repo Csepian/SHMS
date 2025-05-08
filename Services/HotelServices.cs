@@ -69,5 +69,26 @@ namespace SHMS.Services
 
             return query;
         }
+        public async Task<IEnumerable<object>> GetHotelsWithAvailableRoomsAsync()
+        {
+            return await _context.Hotels
+                .Include(h => h.Rooms)
+                .Where(h => h.Rooms.Any(r => r.Availability)) // Filter hotels with available rooms
+                .Select(h => new
+                {
+                    HotelID = h.HotelID,
+                    HotelName = h.Name,
+                    Location = h.Location,
+                    AvailableRoomsCount = h.Rooms.Count(r => r.Availability) // Count available rooms
+                })
+                .ToListAsync();
+        }
+
+        public Hotel GetHotelByName(string name)
+        {
+            return _context.Hotels.Include(h => h.Rooms)
+                .Include(h => h.Reviews)
+                .FirstOrDefault(a => a.Name == name);
+        }
     }
 }

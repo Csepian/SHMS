@@ -14,7 +14,8 @@ namespace SHMS.Model
         [StringLength(50)]
         public string Type { get; set; }
         [Required]
-        [Column(TypeName ="Decimal(18,2)")]
+        [Column(TypeName ="Decimal(10,2)")]
+        [Range(1000,1000000000)]
         public Decimal Price { get; set; }
         [Required]
         public bool Availability { get; set; }

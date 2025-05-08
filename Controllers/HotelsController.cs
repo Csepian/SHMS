@@ -43,10 +43,21 @@ namespace SHMS.Controllers
             }
             return Ok(hotel);
         }
-    
+
+        [HttpGet("ByName/{name}")]
+        public async Task<ActionResult<Hotel>> GetHotelByName( string name)
+        {
+
+            var hotel = _hotelservice.GetHotelByName(name);
+            if (hotel == null)
+            {
+                return NotFound($"No hotel found with the name '{name}'.");
+            }
+            return Ok(hotel);
+        }
 
 
-// PUT: api/Hotels/5
+        // PUT: api/Hotels/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
@@ -108,6 +119,19 @@ namespace SHMS.Controllers
         public ActionResult<IEnumerable<Hotel>> SearchHotels(string? location, string? amenities)
         {
             var hotels = _hotelservice.SearchHotels(location, amenities).ToList();
+            return Ok(hotels);
+        }
+
+        [HttpGet("AvailableHotels")]
+        public async Task<ActionResult<IEnumerable<object>>> GetHotelsWithAvailableRooms()
+        {
+            var hotels = await _hotelservice.GetHotelsWithAvailableRoomsAsync();
+
+            if (!hotels.Any())
+            {
+                return NotFound("No hotels with available rooms found.");
+            }
+
             return Ok(hotels);
         }
 
