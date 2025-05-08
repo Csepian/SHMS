@@ -10,12 +10,12 @@ namespace SHMS.Model
         public int HotelID { get; set; }
         [Required]
         [StringLength(200)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         [StringLength(500)]
-        public string Location { get; set; }
+        public string? Location { get; set; }
         [Required]
-        public int ManagerID { get; set; }
+        public int? ManagerID { get; set; }
         [StringLength(200)]
         public string? Amenities { get; set; }
         public double? Rating { get; set; }
