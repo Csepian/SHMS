@@ -58,6 +58,10 @@ namespace SHMS.Controllers
         [Authorize(Roles = "admin,manager,guest")]
         public async Task<ActionResult<User>> PostUser(UserDTO userDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var user = new User
             {
                 Name = userDto.Name,
@@ -82,6 +86,10 @@ namespace SHMS.Controllers
 
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 await _userService.UpdateUserAsync(user);
             }
             catch (DbUpdateConcurrencyException)

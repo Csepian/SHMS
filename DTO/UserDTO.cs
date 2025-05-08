@@ -1,11 +1,25 @@
-﻿namespace SHMS.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SHMS.DTO
 {
     public class UserDTO
     {
-        public string? Name { get; set; }
-        public string? Email { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format. Example: xyz@mail.com")]
+        public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]+$", ErrorMessage = "Password must contain both letters and numbers.")]
+
         public string? Password { get; set; }
-        public string? Role { get; set; } // Dropdown value: "User" or "Manager"
+        [Required]
+        public string? Role { get; set; }
+        [Required]
+        [MinLength(10, ErrorMessage = "Contact number must be at least 10 characters long.")]
         public string? ContactNumber { get; set; }
     }
 }

@@ -9,16 +9,21 @@ namespace SHMS.Model
         [Key]
         public int UserID { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format. Example: xyz@mail.com")]
+        public string? Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]+$", ErrorMessage = "Password must contain both letters and numbers.")]
+
         public string? Password { get; set; }
         [Required]
         public string? Role { get; set; }
         [Required]
+        [MinLength(10, ErrorMessage = "Contact number must be at least 10 characters long.")]
         public string? ContactNumber { get; set; }
         public ICollection<Booking>? Bookings { get; set; }
         public ICollection<Review>? Reviews { get; set; }
