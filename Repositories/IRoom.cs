@@ -14,5 +14,8 @@ namespace SHMS.Repositories
         Task DeleteRoomAsync(int id);
         bool RoomExists(int id);
         IQueryable<Room> SearchRooms(string? type, decimal? minPrice, decimal? maxPrice, bool? availability);
+        // New method to fetch available rooms
+        Task<IEnumerable<Room>> GetAvailableRoomsAsync(int hotelId, DateTime checkInDate, DateTime checkOutDate);
+    
     }
 }

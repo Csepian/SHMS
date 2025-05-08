@@ -42,13 +42,13 @@ namespace SHMS.Controllers
         }
 
         // POST: api/Rooms
-        [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(RoomDTO roomdto)
+        [HttpPost("{hotelID}")]
+        public async Task<ActionResult<Room>> PostRoom(int hotelID,RoomDTO roomdto)
         {
             var room = new Room
             {
 
-                HotelID = roomdto.HotelID,
+                HotelID = hotelID, // fetch data from url
                 Type = roomdto.Type,
                 Price = roomdto.Price,
                 Availability = roomdto.Availability,
@@ -107,5 +107,29 @@ namespace SHMS.Controllers
             var rooms = _roomService.SearchRooms(type, minPrice, maxPrice, availability).ToList();
             return Ok(rooms);
         }
+
+        [HttpGet("AvailableRooms/{hotelId}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetAvailableRooms(int hotelId, DateTime checkInDate, DateTime checkOutDate)
+        {
+            if (checkInDate < DateTime.UtcNow.Date || checkOutDate < DateTime.UtcNow.Date)
+            {
+                return BadRequest("Check-in and check-out dates cannot be in the past.");
+            }
+
+            if (checkOutDate <= checkInDate)
+            {
+                return BadRequest("Check-out date must be after the check-in date.");
+            }
+
+            var availableRooms = await _roomService.GetAvailableRoomsAsync(hotelId, checkInDate, checkOutDate);
+
+            if (!availableRooms.Any())
+            {
+                return NotFound("No available rooms found for the specified dates.");
+            }
+
+            return Ok(availableRooms);
+        }
+
     }
 }

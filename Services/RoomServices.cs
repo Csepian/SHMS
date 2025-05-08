@@ -80,5 +80,22 @@ namespace SHMS.Services
 
             return query;
         }
+        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(int hotelId, DateTime checkInDate, DateTime checkOutDate)
+        {
+            // Validate input dates
+            if (checkInDate >= checkOutDate)
+            {
+                throw new ArgumentException("Check-out date must be after check-in date.");
+            }
+            return await _context.Rooms
+                .Include(r => r.Hotel)
+                .Where(r => r.HotelID == hotelId && r.Availability &&
+                            !_context.Bookings.Any(b =>
+                                b.RoomID == r.RoomID &&
+                                ((checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) ||
+                                 (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
+                                 (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate))))
+                .ToListAsync();
+        }
     }
 }
