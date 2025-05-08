@@ -59,7 +59,7 @@ namespace SHMS.Services
         {
             if (!await IsRoomAvailableAsync(booking.RoomID, booking.CheckInDate, booking.CheckOutDate))
             {
-                throw new InvalidOperationException("The room is already booked for the selected dates.");
+                throw new InvalidOperationException($"The room is already booked for the selected dates{ booking.CheckInDate }");
             }
 
             await _context.Bookings.AddAsync(booking);
