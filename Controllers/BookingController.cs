@@ -59,11 +59,28 @@ namespace SHMS.Controllers
 
         // POST: api/Bookings
         [HttpPost("{roomId}")]
-        [Authorize(Roles ="admin,user")]
-        public async Task<IActionResult> PostBooking(int roomId,BookingDTO bookingdto)
+        [Authorize(Roles = "admin,user")]
+        public async Task<IActionResult> PostBooking(int roomId, BookingDTO bookingdto)
         {
             try
             {
+                // Validate that CheckInDate and CheckOutDate are not in the past
+                if (bookingdto.CheckInDate < DateTime.UtcNow.Date)
+                {
+                    return BadRequest("Check-in date cannot be in the past.");
+                }
+
+                if (bookingdto.CheckOutDate < DateTime.UtcNow.Date)
+                {
+                    return BadRequest("Check-out date cannot be in the past.");
+                }
+
+                // Validate that CheckOutDate is after CheckInDate
+                if (bookingdto.CheckOutDate <= bookingdto.CheckInDate)
+                {
+                    return BadRequest("Check-out date must be after the check-in date.");
+                }
+
                 // Retrieve the UserID from the authenticated user's claims
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 if (userIdClaim == null)
@@ -93,6 +110,7 @@ namespace SHMS.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
 
         // PUT: api/Bookings/5
         [HttpPut("{id}")]

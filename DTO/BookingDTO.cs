@@ -10,6 +10,7 @@ namespace SHMS.DTO
         [Required]
         public DateTime CheckInDate { get; set; }
         [Required]
+
         public DateTime CheckOutDate { get; set; }
     }
 }

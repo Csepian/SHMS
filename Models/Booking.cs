@@ -14,6 +14,7 @@ namespace SHMS.Model
         [Required]
         public DateTime CheckInDate { get; set; }
         [Required]
+
         public DateTime CheckOutDate { get; set; }
         [Required]
         public string? Status { get; set; } = "Unconfirmed"; //Default value 
