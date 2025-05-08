@@ -85,8 +85,7 @@ namespace SHMS.Controllers
                 Name = hoteldto.Name,
                 Location = hoteldto.Location,
                 ManagerID = hoteldto.ManagerID,
-                Amenities = hoteldto.Amenities,
-                Rating = hoteldto.Rating
+                Amenities = hoteldto.Amenities
 
             };
             await _hotelservice.AddHotelAsync(hotel);
