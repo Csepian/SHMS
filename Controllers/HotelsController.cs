@@ -35,26 +35,40 @@ namespace SHMS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotelByID(int id)
         {
-
-            var hotel = _hotelservice.GetHotelById(id);
-            if (hotel == null)
+            try
             {
-                return NotFound();
+
+                var hotel = _hotelservice.GetHotelById(id);
+                if (hotel == null)
+                {
+                    return NotFound();
+                }
+                return Ok(hotel);
             }
-            return Ok(hotel);
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Hotel>> GetHotelByName( string name)
         {
-
-            var hotel = _hotelservice.GetHotelByName(name);
-            if (hotel == null)
+            try
             {
-                return NotFound($"No hotel found with the name '{name}'.");
+
+                var hotel = _hotelservice.GetHotelByName(name);
+                if (hotel == null)
+                {
+                    return NotFound($"No hotel found with the name '{name}'.");
+                }
+                return Ok(hotel);
             }
-            return Ok(hotel);
-        }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            }
 
 
         // PUT: api/Hotels/5
@@ -120,14 +134,21 @@ namespace SHMS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
-            if (!_hotelservice.HotelExists(id))
+            try
             {
-                return NotFound();
-            }
+                if (!_hotelservice.HotelExists(id))
+                {
+                    return NotFound();
+                }
 
-            await _hotelservice.DeleteHotelAsync(id);
-            return NoContent();
-        }
+                await _hotelservice.DeleteHotelAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            }
         [HttpGet("Search")]
         public ActionResult<IEnumerable<Hotel>> SearchHotels(string? location, string? amenities)
         {
