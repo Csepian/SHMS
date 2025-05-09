@@ -49,8 +49,19 @@ namespace SHMS.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPayment(Payment payment)
         {
-            await _paymentService.AddPaymentAsync(payment);
-            return CreatedAtAction(nameof(GetPaymentById), new { id = payment.PaymentID }, payment);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _paymentService.AddPaymentAsync(payment);
+                return CreatedAtAction(nameof(GetPaymentById), new { id = payment.PaymentID }, payment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // PUT: api/Payments/5

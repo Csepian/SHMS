@@ -41,16 +41,31 @@ namespace SHMS.Services
                 .ToList();
         }
 
-        public async Task AddPaymentAsync(Payment payment)
+        public async Task<string> AddPaymentAsync(Payment payment)
         {
+            var booking = await _context.Bookings
+        .Include(b => b.Room) // Include the associated room
+        .FirstOrDefaultAsync(b => b.BookingID == payment.BookingID);
+
+            if (payment.Amount != booking.Room.Price)
+            {
+                throw new InvalidOperationException($"Payment amount must match the room price. Expected: {booking.Room.Price}, Received: {payment.Amount}");
+            }
+            else
+            {
+                payment.Status = true; // Set status to true for successful payment
+            }
+                
             await _context.Payments.AddAsync(payment);
             await _context.SaveChangesAsync();
-
             // Check if payment status is "Done" and update booking status
             if (payment.Status)
             {
                 await UpdateBookingStatusAsync(payment.BookingID, "Confirmed");
             }
+            return "Payment Successful";
+
+            
         }
 
         public async Task UpdatePaymentAsync(Payment payment)
