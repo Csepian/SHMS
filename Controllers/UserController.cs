@@ -55,7 +55,6 @@ namespace SHMS.Controllers
 
         // POST: api/Users
         [HttpPost]
-        [Authorize(Roles = "admin,manager,guest")]
         public async Task<ActionResult<User>> PostUser(UserDTO userDto)
         {
             if (!ModelState.IsValid)
