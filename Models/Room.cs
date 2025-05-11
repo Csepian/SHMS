@@ -18,7 +18,7 @@ namespace SHMS.Model
         [Range(1000,1000000000)]
         public Decimal Price { get; set; }
         [Required]
-        public bool Availability { get; set; }
+        public bool Availability { get; set; } = true;//initially  true 
         [StringLength(500)]
         public string? Features { get; set; }
 //Navigation Properties

@@ -65,10 +65,12 @@ namespace SHMS.Controllers
             {
                 Name = userDto.Name,
                 Email = userDto.Email,
-                Password = userDto.Password,
                 Role = userDto.Role,
                 ContactNumber = userDto.ContactNumber
             };
+            // Hash the password
+            user.SetPassword(userDto.Password!);
+
             await _userService.AddUserAsync(user);
             return CreatedAtAction(nameof(GetUserById), new { id = user.UserID }, user);
         }
@@ -76,33 +78,31 @@ namespace SHMS.Controllers
         // PUT: api/Users/5
         [HttpPut("{id}")]
         [Authorize(Roles = "admin,manager,guest")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UserDTO userdto)
         {
-            if (id != user.UserID)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("User ID mismatch.");
+                return BadRequest(ModelState);
             }
 
-            try
+            var user = _userService.GetUserById(id);
+            if (user == null)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                await _userService.UpdateUserAsync(user);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_userService.UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
+            user.Name = userdto.Name;
+            user.Email = userdto.Email;
+            user.Role = userdto.Role;
+            user.ContactNumber = userdto.ContactNumber;
+
+            // Hash the password if it is being updated
+            if (!string.IsNullOrEmpty(userdto.Password))
+            {
+                user.SetPassword(userdto.Password);
+            }
+
+            await _userService.UpdateUserAsync(user);
             return NoContent();
         }
 
