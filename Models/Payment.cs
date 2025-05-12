@@ -15,14 +15,16 @@ namespace SHMS.Model
         [Column(TypeName = "Decimal(18,2)")]
         public Decimal Amount { get; set; }
         [Required]
-        public bool Status { get; set; } = false; // Default to false
+        public bool Status { get; set; } = false; // default to false beacause payment is not done 1 time
         [Required]
         [StringLength(50)]
         public string PaymentMethod { get; set; }
+
         //Navigation Properties
         [ForeignKey("UserID")]
         public User? User { get; set; }
+
         [ForeignKey("BookingID")]
-        public Booking? Booking { get; set; }
+        public Booking? Booking { get; set; }  //property allow to access
     }
 }

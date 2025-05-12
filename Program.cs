@@ -6,33 +6,37 @@ using Microsoft.OpenApi.Models;
 using SHMS.Authorize;
 using SHMS.Data;
 using SHMS.Repositories;
-using SHMS.Services;
+using SHMS.Services;  
 
+// SHMS - initialize app and prepare for DI ,DB setup,other config
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// DB setup - SQL server connection using EFCore
 builder.Services.AddDbContext<SHMSContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnect")));
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();  // support API controller 
+builder.Services.AddEndpointsApiExplorer();   // swagger support
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IHotel, HotelServices>();
+
+// register services for DI
+builder.Services.AddScoped<IHotel, HotelServices>();   // repo-manage db operation ,services - handle business logic
 builder.Services.AddScoped<IRoom, RoomServices>();
 builder.Services.AddScoped<IReview, ReviewServices>();
 builder.Services.AddScoped<IBooking, BookingService>();
 builder.Services.AddScoped<IPayment, PaymentService>();
 builder.Services.AddScoped<ITokenGenerate, TokenService>();
 builder.Services.AddScoped<IUser, UserService>();
+
+// check JSON response valid and not occur any issue it 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-// Configure JWT Authentication
+
+// JWT auth setup - only authorized user can acess API 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
                {
-
                    options.TokenValidationParameters = new TokenValidationParameters
                    {
                        ValidateIssuerSigningKey = true,
@@ -42,7 +46,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    };
                });
 
-builder.Services.AddSwaggerGen(c => {
+// Swagger Config - allow develpoer to test API in swagger
+builder.Services.AddSwaggerGen(c =>
+{
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -53,24 +59,24 @@ builder.Services.AddSwaggerGen(c => {
         Description = "JWT Authorization header using the Bearer scheme."
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                 {
-                     {
-                           new OpenApiSecurityScheme
-                             {
-                                 Reference = new OpenApiReference
-                                 {
-                                     Type = ReferenceType.SecurityScheme,
-                                     Id = "Bearer"
-                                 }
-                             },
-                             Array.Empty<string>()
-
-                     }
-                 });
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// middleware pipeline - order is important 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -78,9 +84,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

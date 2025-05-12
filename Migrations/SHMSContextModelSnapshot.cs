@@ -72,7 +72,8 @@ namespace SHMS.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("ManagerID")
+                    b.Property<int?>("ManagerID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -178,7 +179,7 @@ namespace SHMS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("Decimal(18,2)");
+                        .HasColumnType("Decimal(10,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
