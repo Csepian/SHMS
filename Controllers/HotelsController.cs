@@ -52,7 +52,7 @@ namespace SHMS.Controllers
         }
 
         [HttpGet("ByName/{name}")]
-        public async Task<ActionResult<Hotel>> GetHotelByName( string name)
+        public async Task<ActionResult<Hotel>> GetHotelByName(string name)
         {
             try
             {

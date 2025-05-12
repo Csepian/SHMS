@@ -12,8 +12,8 @@ using SHMS.Data;
 namespace SHMS.Migrations
 {
     [DbContext(typeof(SHMSContext))]
-    [Migration("20250502105332_mig2")]
-    partial class mig2
+    [Migration("20250508123523_first change")]
+    partial class firstchange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,7 +75,8 @@ namespace SHMS.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("ManagerID")
+                    b.Property<int?>("ManagerID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -181,7 +182,7 @@ namespace SHMS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("Decimal(18,2)");
+                        .HasColumnType("Decimal(10,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
