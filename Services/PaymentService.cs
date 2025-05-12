@@ -54,6 +54,8 @@ namespace SHMS.Services
             else
             {
                 payment.Status = true; // Set status to true for successful payment
+                booking.Room.Availability = false;// Set room availability to false
+                _context.Entry(booking.Room).State = EntityState.Modified; // Update the room availability
             }
                 
             await _context.Payments.AddAsync(payment);

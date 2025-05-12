@@ -10,8 +10,6 @@ namespace SHMS.DTO
         public string? Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
-        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$", ErrorMessage = "Password must contain letters and numbers and special characters.")]
         public string? Password { get; set; }
         [Required]
         public string? Role { get; set; }
