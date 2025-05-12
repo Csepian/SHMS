@@ -24,15 +24,35 @@ namespace SHMS.Services
         }
         public async Task AddHotelAsync(Hotel hotel)
         {
+            // Validate that the ManagerID belongs to a user with the "manager" role
+            var manager = await _context.Users.FirstOrDefaultAsync(u => u.UserID == hotel.ManagerID && u.Role == "manager");
+            if (manager == null)
+            {
+                throw new InvalidOperationException("The specified ManagerID does not belong to a user with the 'manager' role.");
+            }
+
+            // Add the hotel to the database
             await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
         }
 
+
+
         public async Task UpdateHotelAsync(Hotel hotel)
         {
+            // Validate that the ManagerID belongs to a user with the "manager" role
+            var manager = await _context.Users.FirstOrDefaultAsync(u => u.UserID == hotel.ManagerID && u.Role == "manager");
+            if (manager == null)
+            {
+                throw new InvalidOperationException("The specified ManagerID does not belong to a user with the 'manager' role.");
+            }
+
+            // Update the hotel in the database
             _context.Entry(hotel).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+
 
         public async Task DeleteHotelAsync(int id)
         {

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SHMS.DTO;
 using SHMS.Model;
 using SHMS.Repositories;
 
-namespace SHMS.Controllers
+
+namespace SHMS.Controllers   // using namespace for avoid naming conflict
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -47,10 +49,29 @@ namespace SHMS.Controllers
 
         // POST: api/Payments
         [HttpPost]
-        public async Task<IActionResult> PostPayment(Payment payment)
+        public async Task<IActionResult> PostPayment(PaymentDTO paymentDTO)
         {
-            await _paymentService.AddPaymentAsync(payment);
-            return CreatedAtAction(nameof(GetPaymentById), new { id = payment.PaymentID }, payment);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var payment = new Payment
+                {
+                    UserID = paymentDTO.UserID,
+                    BookingID = paymentDTO.BookingID,
+                    Amount = paymentDTO.Amount,
+                    PaymentMethod = paymentDTO.PaymentMethod,
+                };
+
+                await _paymentService.AddPaymentAsync(payment);
+                return CreatedAtAction(nameof(GetPaymentById), new { id = payment.PaymentID }, payment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // PUT: api/Payments/5
