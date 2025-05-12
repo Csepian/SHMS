@@ -45,7 +45,7 @@ namespace SHMS.Controllers
         }
 
         [HttpGet("ByName/{name}")]
-        public async Task<ActionResult<Hotel>> GetHotelByName( string name)
+        public async Task<ActionResult<Hotel>> GetHotelByName(string name)
         {
 
             var hotel = _hotelservice.GetHotelByName(name);
@@ -69,6 +69,11 @@ namespace SHMS.Controllers
             try
             {
                 await _hotelservice.UpdateHotelAsync(hotel);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,27 +86,35 @@ namespace SHMS.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
+
+
 
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Hotel>> PostHotel(HotelDTO hoteldto)
         {
-            var hotel = new Hotel
+            try
             {
+                var hotel = new Hotel
+                {
+                    Name = hoteldto.Name,
+                    Location = hoteldto.Location,
+                    ManagerID = hoteldto.ManagerID,
+                    Amenities = hoteldto.Amenities
+                };
 
-                Name = hoteldto.Name,
-                Location = hoteldto.Location,
-                ManagerID = hoteldto.ManagerID,
-                Amenities = hoteldto.Amenities
-
-            };
-            await _hotelservice.AddHotelAsync(hotel);
-            return CreatedAtAction(nameof(GetHotelByID), new { id = hotel.HotelID }, hotel);
+                await _hotelservice.AddHotelAsync(hotel);
+                return CreatedAtAction(nameof(GetHotelByID), new { id = hotel.HotelID }, hotel);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
+
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
