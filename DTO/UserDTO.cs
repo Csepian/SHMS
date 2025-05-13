@@ -20,6 +20,7 @@ namespace SHMS.DTO
         public string? Role { get; set; }
         [Required]
         [MinLength(10, ErrorMessage = "Contact number must be at least 10 characters long.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Invalid contact number")]
         public string? ContactNumber { get; set; }
     }
 }
