@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -17,7 +19,7 @@ namespace SHMS.Model
         [Required]
         [DataType(DataType.Password)]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
-        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]+$", ErrorMessage = "Password must contain both letters and numbers.")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$", ErrorMessage = "Password must contain letters, numbers and special characters.")]
 
         public string? Password { get; set; }
         [Required]
@@ -30,7 +32,27 @@ namespace SHMS.Model
         public ICollection<Payment>? Payments { get; set; }
 //Navigation Property
         public Hotel? Hotel { get; set; }
+        // Method to hash the password
+        public void SetPassword(string password)
+        {
+            Password = HashPassword(password);
+        }
 
-        
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
     }
 }
+
+        
+   

@@ -55,11 +55,15 @@ namespace SHMS.Services  // handles bussiness logic
 
             //check payment amount and room price same or not then status shuffle
             if (payment.Amount != booking.Room.Price)  
+
             {
                 throw new InvalidOperationException($"Payment amount must match the room price. Expected: {booking.Room.Price}, Received: {payment.Amount}");
             }
             else
             {
+
+            // Check if payment status is "Done" and update booking status
+
                 payment.Status = true; //payment sucess then status set true 
                 booking.Room.Availability = false;
                 _context.Entry(booking.Room).State = EntityState.Modified;
@@ -69,11 +73,13 @@ namespace SHMS.Services  // handles bussiness logic
             await _context.SaveChangesAsync();
 
             // update booking status on successful payment
+
             if (payment.Status)
             {
                 await UpdateBookingStatusAsync(payment.BookingID, "Confirmed");
             }
             return "Payment Successful";
+
         }
 
         // update payment sucess then confirmed status

@@ -18,10 +18,10 @@ namespace SHMS.Repositories  //manages DB operations(CRUD)  defines only
         // fetch User specific Payments from DB
         IEnumerable<Payment> GetPaymentsByUser(int userId);
 
-        // creates new Payment record & returns status msg
         Task<string> AddPaymentAsync(Payment payment);
 
         // modifies existing payment info in DB
+
         Task UpdatePaymentAsync(Payment payment);
 
         // removes payment record from DB 
