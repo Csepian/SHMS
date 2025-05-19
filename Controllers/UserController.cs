@@ -65,11 +65,10 @@ namespace SHMS.Controllers
             {
                 Name = userDto.Name,
                 Email = userDto.Email,
+                Password = userDto.Password,
                 Role = userDto.Role,
                 ContactNumber = userDto.ContactNumber
             };
-            // Hash the password
-            user.SetPassword(userDto.Password!);
 
             await _userService.AddUserAsync(user);
             return CreatedAtAction(nameof(GetUserById), new { id = user.UserID }, user);
@@ -93,14 +92,9 @@ namespace SHMS.Controllers
 
             user.Name = userdto.Name;
             user.Email = userdto.Email;
+            user.Password = userdto.Password;
             user.Role = userdto.Role;
             user.ContactNumber = userdto.ContactNumber;
-
-            // Hash the password if it is being updated
-            if (!string.IsNullOrEmpty(userdto.Password))
-            {
-                user.SetPassword(userdto.Password);
-            }
 
             await _userService.UpdateUserAsync(user);
             return NoContent();
