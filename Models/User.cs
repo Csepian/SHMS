@@ -33,8 +33,15 @@ namespace SHMS.Model
         public ICollection<Payment>? Payments { get; set; }
 //Navigation Property
         public Hotel? Hotel { get; set; }
-        // Method to hash the password
-
+        public string SetPassword(string password)
+        {
+            Password = BCrypt.Net.BCrypt.HashPassword(password);
+            return Password;
+        }
+        public bool VerifyPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, Password);
+        }
     }
 }
 

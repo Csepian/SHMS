@@ -46,7 +46,12 @@ namespace SHMS.Authorize
 
         private async Task<User> GetUser(string email, string password, string role)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password && u.Role == role) ?? new Model.User();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Role == role);
+            if (user != null && user.VerifyPassword(password))
+            {
+                return user;
+            }
+            return null;
         }
     }
 }
