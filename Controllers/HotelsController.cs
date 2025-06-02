@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace SHMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowReactApp")]
     public class HotelsController : ControllerBase
     {
         private readonly IHotel _hotelservice;
@@ -109,22 +111,23 @@ namespace SHMS.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "manager")] // Only managers can add hotels
+        //[Authorize(Roles = "manager")] 
         public async Task<ActionResult<Hotel>> PostHotel(HotelDTO hoteldto)
         {
-            // Extract UserID from JWT claims
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized("User ID not found in token.");
-            }
-            int managerId = int.Parse(userIdClaim.Value);
+            //// Extract UserID from JWT claims
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            //if (userIdClaim == null)
+            //{
+            //    return Unauthorized("User ID not found in token.");
+            //}
+            //int managerId = int.Parse(userIdClaim.Value);
 
             var hotel = new Hotel
             {
                 Name = hoteldto.Name,
                 Location = hoteldto.Location,
-                ManagerID = managerId, // Set automatically from logged-in user
+                ManagerID = hoteldto.ManagerID, 
+ // ManagerID = managerId, // Set automatically from logged-in user
                 Amenities = hoteldto.Amenities
             };
 

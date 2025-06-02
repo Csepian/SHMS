@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SHMS.DTO;
 using SHMS.Model;
@@ -12,6 +13,7 @@ namespace SHMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowReactApp")]
     public class BookingsController : ControllerBase
     {
         private readonly IBooking _bookingService;
@@ -59,7 +61,7 @@ namespace SHMS.Controllers
 
         // POST: api/Bookings
         [HttpPost("{roomId}")]
-        [Authorize(Roles = "admin,user")]
+        //[Authorize(Roles = "admin,user")]
         public async Task<IActionResult> PostBooking(int roomId, BookingDTO bookingdto)
         {
             try

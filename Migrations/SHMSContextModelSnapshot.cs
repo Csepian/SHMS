@@ -261,13 +261,13 @@ namespace SHMS.Migrations
                     b.HasOne("SHMS.Model.Booking", "Booking")
                         .WithOne("Payment")
                         .HasForeignKey("SHMS.Model.Payment", "BookingID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SHMS.Model.User", "User")
                         .WithMany("Payments")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Booking");

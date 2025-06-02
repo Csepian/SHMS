@@ -61,7 +61,9 @@ namespace SHMS.Services
             {
                 throw new InvalidOperationException($"The room is already booked for the selected dates{ booking.CheckInDate }");
             }
-
+            var room = await _context.Rooms
+                .FirstOrDefaultAsync(r => r.RoomID == booking.RoomID); //fetch room detail
+            room.Availability = false;
             await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
         }
@@ -82,6 +84,7 @@ namespace SHMS.Services
                 _context.Bookings.Remove(booking);
                 await _context.SaveChangesAsync();
             }
+            booking.Room.Availability = true;
         }
 
         public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)

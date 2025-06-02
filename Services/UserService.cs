@@ -36,6 +36,7 @@ namespace SHMS.Services
 
         public async Task AddUserAsync(User user)
         {
+            user.SetPassword(user.Password!);
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }
