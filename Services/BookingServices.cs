@@ -104,27 +104,36 @@ namespace SHMS.Services
                 return false;
             }
 
-            // Check if the current time is at least 24 hours before the check-in date
-            var now = DateTime.UtcNow;
+            // Check if the current time is at least 23 hours before the check-in date
+            var now = DateTime.Today;
             return now < booking.CheckInDate.AddHours(-23);
         }
-        public async Task<bool> CancelBookingAsync(int bookingId)
+        public async Task<string> CancelBookingAsync(int bookingId)
         {
-            var booking = await _context.Bookings.FindAsync(bookingId);
-            if (booking == null)
-                return false;
+            try
+            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Room)
+                    .FirstOrDefaultAsync(b => b.BookingID == bookingId);
 
-            // Optional: Check if cancellation is allowed
-            if (!await CanCancelBookingAsync(bookingId))
-                return false;
+                if (booking == null)
+                    return "Booking not found.";
 
-            booking.Status = "Cancelled";
-            // Remove the booking after setting status
-            _context.Bookings.Remove(booking);
+                if (!await CanCancelBookingAsync(bookingId))
+                    return "You can't cancel booking within 24 hours of check-in date. Please contact hotel manager";
 
-            await _context.SaveChangesAsync();
-            return true;
+                booking.Status = "Cancelled";
+                booking.Room.Availability = true;
+
+                await _context.SaveChangesAsync();
+                return "Booking cancelled successfully.";
+            }
+            catch (Exception)
+            {
+                return "An error occurred while cancelling the booking.";
+            }
         }
+
 
     }
 }

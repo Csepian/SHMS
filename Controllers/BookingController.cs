@@ -139,11 +139,12 @@ namespace SHMS.Controllers
         [HttpPost("cancel/{id}")]
         public async Task<IActionResult> CancelBooking(int id)
         {
-            var result = await _bookingService.CancelBookingAsync(id);
-            if (!result)
-                return BadRequest("Cannot cancel booking.");
-            return Ok("Booking cancelled.");
+            var message = await _bookingService.CancelBookingAsync(id);
+            if (message != "Booking cancelled successfully.")
+                return BadRequest(new { message });
+            return Ok(new { message });
         }
+
 
         // Delete Booking
         [HttpDelete("{id}")]
