@@ -106,7 +106,25 @@ namespace SHMS.Services
 
             // Check if the current time is at least 24 hours before the check-in date
             var now = DateTime.UtcNow;
-            return now < booking.CheckInDate.AddHours(-24);
+            return now < booking.CheckInDate.AddHours(-23);
         }
+        public async Task<bool> CancelBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+                return false;
+
+            // Optional: Check if cancellation is allowed
+            if (!await CanCancelBookingAsync(bookingId))
+                return false;
+
+            booking.Status = "Cancelled";
+            // Remove the booking after setting status
+            _context.Bookings.Remove(booking);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

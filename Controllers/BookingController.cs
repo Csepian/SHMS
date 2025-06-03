@@ -135,27 +135,22 @@ namespace SHMS.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Bookings/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id,User user)
+        // Cancel Booking
+        [HttpPost("cancel/{id}")]
+        public async Task<IActionResult> CancelBooking(int id)
         {
-            if (user.Role == "Admin")
-            {
-                await _bookingService.DeleteBookingAsync(id);
-                return NoContent();
-            }
-            else
-            {
-                if (await _bookingService.CanCancelBookingAsync(id))
-                {
-                    await _bookingService.DeleteBookingAsync(id);
-                    return NoContent();
-                }
-                else
-                {
-                    return BadRequest("Cannot cancel booking.");
-                }
-            }
+            var result = await _bookingService.CancelBookingAsync(id);
+            if (!result)
+                return BadRequest("Cannot cancel booking.");
+            return Ok("Booking cancelled.");
+        }
+
+        // Delete Booking
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            await _bookingService.DeleteBookingAsync(id);
+            return Ok("Booking deleted.");
         }
     }
 }
