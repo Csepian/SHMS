@@ -29,6 +29,13 @@ namespace SHMS.Controllers
             var reviews = _reviewService.GetReviewsByHotel(hotel);
             return Ok(reviews);
         }
+        // GET: api/Review
+        [HttpGet]
+        public ActionResult<IEnumerable<Review>> GetAllReviews()
+        {
+            var reviews = _reviewService.GetAllReviews();
+            return Ok(reviews);
+        }
 
         // POST: api/Reviews
         [HttpPost]

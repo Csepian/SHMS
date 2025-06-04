@@ -24,6 +24,13 @@ namespace SHMS.Services
                 .Where(r => r.HotelID == hotel.HotelID)
                 .ToList();
         }
+        public IEnumerable<Review> GetAllReviews()
+        {
+            return _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Hotel)
+                .ToList();
+        }
 
         public async Task AddReviewAsync(Review review)
         {
