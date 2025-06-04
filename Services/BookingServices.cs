@@ -66,6 +66,7 @@ namespace SHMS.Services
             room.Availability = false;
             await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
+
         }
 
         public async Task UpdateBookingAsync(Booking booking)

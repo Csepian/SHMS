@@ -87,15 +87,22 @@ namespace SHMS.Services
             {
                 throw new ArgumentException("Check-out date must be after check-in date.");
             }
+
             return await _context.Rooms
                 .Include(r => r.Hotel)
                 .Where(r => r.HotelID == hotelId && r.Availability &&
-                            !_context.Bookings.Any(b =>
-                                b.RoomID == r.RoomID &&
-                                ((checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) ||
-                                 (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
-                                 (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate))))
+                    !_context.Bookings.Any(b =>
+                        b.RoomID == r.RoomID &&
+                        b.Status != "Cancelled" && // Only consider non-cancelled bookings
+                        (
+                            (checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) ||
+                            (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
+                            (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate)
+                        )
+                    )
+                )
                 .ToListAsync();
         }
+
     }
 }
