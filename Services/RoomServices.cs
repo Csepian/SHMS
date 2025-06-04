@@ -21,6 +21,14 @@ namespace SHMS.Services
         {
             return _context.Rooms.Include(r => r.Hotel).ToList();
         }
+        public IEnumerable<Room> GetRoomsByHotelId(int hotelId)
+        {
+            return _context.Rooms
+                .Include(r => r.Hotel)
+                .Where(r => r.HotelID == hotelId)
+                .ToList();
+        }
+
 
         public Room GetRoomById(int id)
         {

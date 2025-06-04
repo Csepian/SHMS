@@ -9,6 +9,8 @@ namespace SHMS.Repositories
     {
         IEnumerable<Room> GetRooms();
         Room GetRoomById(int id);
+        IEnumerable<Room> GetRoomsByHotelId(int hotelId);
+
         Task AddRoomAsync(Room room);
         Task UpdateRoomAsync(Room room);
         Task DeleteRoomAsync(int id);

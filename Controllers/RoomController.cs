@@ -30,6 +30,15 @@ namespace SHMS.Controllers
             var rooms = _roomService.GetRooms();
             return Ok(rooms);
         }
+        [HttpGet("{hotelId}/rooms")]
+        public ActionResult<IEnumerable<Room>> GetRoomsByHotelId(int hotelId)
+        {
+            var rooms = _roomService.GetRoomsByHotelId(hotelId);
+            if (!rooms.Any())
+                return NotFound($"No rooms found for hotel with ID {hotelId}.");
+            return Ok(rooms);
+        }
+
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
