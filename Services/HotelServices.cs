@@ -89,6 +89,12 @@ namespace SHMS.Services
 
             return query;
         }
+        public Hotel GetHotelsByManagerId(int managerId)
+        {
+            return _context.Hotels
+                .FirstOrDefault(h => h.ManagerID == managerId);
+        }
+
         public async Task<IEnumerable<object>> GetHotelsWithAvailableRoomsAsync()
         {
             return await _context.Hotels

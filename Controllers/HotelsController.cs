@@ -54,6 +54,15 @@ namespace SHMS.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpGet("by-manager/{managerId}")]
+        public async Task<ActionResult<Hotel>> GetHotelsByManagerId(int managerId)
+        {
+            var hotels = _hotelservice.GetHotelsByManagerId(managerId);
+            if (hotels==null)
+                return NotFound($"No hotels found for manager with ID {managerId}.");
+            return Ok(hotels);
+        }
+
 
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Hotel>> GetHotelByName(string name)
