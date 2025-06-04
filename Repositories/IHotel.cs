@@ -5,6 +5,7 @@ namespace SHMS.Repositories
     public interface IHotel
     {
         IEnumerable<Hotel> GetHotels();
+        Hotel GetHotelsByManagerId(int managerId);
         Hotel GetHotelById(int id);
         Hotel GetHotelByName(string name);
         Task UpdateHotelAsync(Hotel hotel);
