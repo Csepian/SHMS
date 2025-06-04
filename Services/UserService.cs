@@ -36,19 +36,12 @@ namespace SHMS.Services
 
         public async Task AddUserAsync(User user)
         {
-            // Hash the password before saving
-            user.SetPassword(user.Password!);
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateUserAsync(User user)
         {
-            // Hash the password if it is being updated
-            if (!string.IsNullOrEmpty(user.Password))
-            {
-                user.SetPassword(user.Password);
-            }
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

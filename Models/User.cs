@@ -26,30 +26,21 @@ namespace SHMS.Model
         public string? Role { get; set; }
         [Required]
         [MinLength(10, ErrorMessage = "Contact number must be at least 10 characters long.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Invalid contact number")]
         public string? ContactNumber { get; set; }
         public ICollection<Booking>? Bookings { get; set; }
         public ICollection<Review>? Reviews { get; set; }
         public ICollection<Payment>? Payments { get; set; }
 //Navigation Property
         public Hotel? Hotel { get; set; }
-        // Method to hash the password
-        public void SetPassword(string password)
+        public string SetPassword(string password)
         {
-            Password = HashPassword(password);
+            Password = BCrypt.Net.BCrypt.HashPassword(password);
+            return Password;
         }
-
-        private string HashPassword(string password)
+        public bool VerifyPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
+            return BCrypt.Net.BCrypt.Verify(password, Password);
         }
     }
 }

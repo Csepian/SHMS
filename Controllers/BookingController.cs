@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SHMS.DTO;
 using SHMS.Model;
@@ -12,6 +13,7 @@ namespace SHMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowReactApp")]
     public class BookingsController : ControllerBase
     {
         private readonly IBooking _bookingService;
@@ -59,7 +61,7 @@ namespace SHMS.Controllers
 
         // POST: api/Bookings
         [HttpPost("{roomId}")]
-        [Authorize(Roles = "admin,user")]
+        //[Authorize(Roles = "admin,user")]
         public async Task<IActionResult> PostBooking(int roomId, BookingDTO bookingdto)
         {
             try
@@ -133,27 +135,23 @@ namespace SHMS.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Bookings/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id,User user)
+        // Cancel Booking
+        [HttpPost("cancel/{id}")]
+        public async Task<IActionResult> CancelBooking(int id)
         {
-            if (user.Role == "Admin")
-            {
-                await _bookingService.DeleteBookingAsync(id);
-                return NoContent();
-            }
-            else
-            {
-                if (await _bookingService.CanCancelBookingAsync(id))
-                {
-                    await _bookingService.DeleteBookingAsync(id);
-                    return NoContent();
-                }
-                else
-                {
-                    return BadRequest("Cannot cancel booking.");
-                }
-            }
+            var message = await _bookingService.CancelBookingAsync(id);
+            if (message != "Booking cancelled successfully.")
+                return BadRequest(new { message });
+            return Ok(new { message });
+        }
+
+
+        // Delete Booking
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            await _bookingService.DeleteBookingAsync(id);
+            return Ok("Booking deleted.");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace SHMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowReactApp")]
     public class UserController : ControllerBase
     {
         private readonly IUser _userService;
@@ -21,7 +23,7 @@ namespace SHMS.Controllers
 
         // GET: api/Users
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
             return Ok(_userService.GetAllUsers());

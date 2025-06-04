@@ -13,7 +13,7 @@ namespace SHMS.DTOs
         [StringLength(500)]
         public string? Location { get; set; }
         [Required]
-        public int ManagerID { get; set; }
+        public int? ManagerID { get; set; }
 
         [StringLength(200)]
         public string? Amenities { get; set; }

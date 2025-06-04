@@ -61,9 +61,12 @@ namespace SHMS.Services
             {
                 throw new InvalidOperationException($"The room is already booked for the selected dates{ booking.CheckInDate }");
             }
-
+            var room = await _context.Rooms
+                .FirstOrDefaultAsync(r => r.RoomID == booking.RoomID); //fetch room detail
+            room.Availability = false;
             await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
+
         }
 
         public async Task UpdateBookingAsync(Booking booking)
@@ -82,6 +85,7 @@ namespace SHMS.Services
                 _context.Bookings.Remove(booking);
                 await _context.SaveChangesAsync();
             }
+            booking.Room.Availability = true;
         }
 
         public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)
@@ -101,9 +105,36 @@ namespace SHMS.Services
                 return false;
             }
 
-            // Check if the current time is at least 24 hours before the check-in date
-            var now = DateTime.UtcNow;
-            return now < booking.CheckInDate.AddHours(-24);
+            // Check if the current time is at least 23 hours before the check-in date
+            var now = DateTime.Today;
+            return now < booking.CheckInDate.AddHours(-23);
         }
+        public async Task<string> CancelBookingAsync(int bookingId)
+        {
+            try
+            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Room)
+                    .FirstOrDefaultAsync(b => b.BookingID == bookingId);
+
+                if (booking == null)
+                    return "Booking not found.";
+
+                if (!await CanCancelBookingAsync(bookingId))
+                    return "You can't cancel booking within 24 hours of check-in date. Please contact hotel manager";
+
+                booking.Status = "Cancelled";
+                booking.Room.Availability = true;
+
+                await _context.SaveChangesAsync();
+                return "Booking cancelled successfully.";
+            }
+            catch (Exception)
+            {
+                return "An error occurred while cancelling the booking.";
+            }
+        }
+
+
     }
 }

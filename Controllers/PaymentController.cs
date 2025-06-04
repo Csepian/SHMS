@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SHMS.DTO;
 using SHMS.Model;
@@ -10,6 +11,7 @@ namespace SHMS.Controllers   // using namespace for avoid naming conflict
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowReactApp")]
     public class PaymentsController : ControllerBase
     {
         private readonly IPayment _paymentService;
@@ -62,6 +64,7 @@ namespace SHMS.Controllers   // using namespace for avoid naming conflict
                     UserID = paymentDTO.UserID,
                     BookingID = paymentDTO.BookingID,
                     Amount = paymentDTO.Amount,
+                    Status=paymentDTO.Status,
                     PaymentMethod = paymentDTO.PaymentMethod,
                 };
 

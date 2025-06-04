@@ -13,7 +13,9 @@ namespace SHMS.DTO
         [Required]
         [Column(TypeName = "Decimal(18,2)")]
         public Decimal Amount { get; set; }
-       
+        [Required]
+        public bool Status { get; set; } = false; // default to false beacause payment is not done 1st time
+
         [Required]
         [StringLength(50)]
         public string PaymentMethod { get; set; }
