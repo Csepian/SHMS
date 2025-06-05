@@ -1,4 +1,5 @@
-﻿using SHMS.Model;
+﻿using SHMS.DTOs;
+using SHMS.Model;
 
 namespace SHMS.Repositories
 {
@@ -14,6 +15,7 @@ namespace SHMS.Repositories
         Task DeleteHotelAsync(int id);
         IQueryable<Hotel> SearchHotels(string? location, string? amenities);
         Task<IEnumerable<object>> GetHotelsWithAvailableRoomsAsync();
-    
+        Task<string> PatchHotelAsync(int id, HotelDTO patch);
+
     }
 }

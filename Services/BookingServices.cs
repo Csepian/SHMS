@@ -76,16 +76,36 @@ namespace SHMS.Services
             _context.Entry(booking).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+        public async Task<string> PatchBookingAsync(int bookingId, Booking patch)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+                return "Booking not found.";
+
+            // Update only provided fields (example: CheckInDate, CheckOutDate, Status)
+            if (patch.CheckInDate != default && patch.CheckInDate != booking.CheckInDate)
+                booking.CheckInDate = patch.CheckInDate;
+            if (patch.CheckOutDate != default && patch.CheckOutDate != booking.CheckOutDate)
+                booking.CheckOutDate = patch.CheckOutDate;
+            if (!string.IsNullOrEmpty(patch.Status) && patch.Status != booking.Status)
+                booking.Status = patch.Status;
+            // Add more fields as needed
+
+            await _context.SaveChangesAsync();
+            return "Booking updated successfully.";
+        }
+
 
         public async Task DeleteBookingAsync(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
+     
             if (booking != null)
             {
                 _context.Bookings.Remove(booking);
                 await _context.SaveChangesAsync();
             }
-            booking.Room.Availability = true;
+            
         }
 
         public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)

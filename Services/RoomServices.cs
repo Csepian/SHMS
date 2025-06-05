@@ -111,6 +111,21 @@ namespace SHMS.Services
                 )
                 .ToListAsync();
         }
+        public async Task<string> PatchRoomAsync(int id, Room patch)
+        {
+            var room = await _context.Rooms.FindAsync(id);
+            if (room == null) return "Room not found.";
+
+            if (!string.IsNullOrEmpty(patch.Type)) room.Type = patch.Type;
+            if (patch.Price != default) room.Price = patch.Price;
+            if (patch.Availability != room.Availability) room.Availability = patch.Availability;
+            if (!string.IsNullOrEmpty(patch.Features)) room.Features = patch.Features;
+            // Add more fields as needed
+
+            await _context.SaveChangesAsync();
+            return "Room updated successfully.";
+        }
+
 
     }
 }

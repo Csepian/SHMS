@@ -81,6 +81,26 @@ namespace SHMS.Services
             _context.Entry(hotel).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+        public IEnumerable<User> GetUsersByRole(string role)
+        {
+            return _context.Users.Where(u => u.Role == role).ToList();
+        }
+        public async Task<string> PatchUserAsync(int id, User patch)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return "User not found.";
+
+            if (!string.IsNullOrEmpty(patch.Name)) user.Name = patch.Name;
+            if (!string.IsNullOrEmpty(patch.Email)) user.Email = patch.Email;
+            if (!string.IsNullOrEmpty(patch.Password)) user.Password = patch.Password;
+            if (!string.IsNullOrEmpty(patch.Role)) user.Role = patch.Role;
+            if (!string.IsNullOrEmpty(patch.ContactNumber)) user.ContactNumber = patch.ContactNumber;
+            // Add more fields as needed
+
+            await _context.SaveChangesAsync();
+            return "User updated successfully.";
+        }
+
 
     }
 }

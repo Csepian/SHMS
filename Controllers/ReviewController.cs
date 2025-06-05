@@ -81,5 +81,14 @@ namespace SHMS.Controllers
             await _reviewService.DeleteReviewAsync(id);
             return NoContent();
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchReview(int id, [FromBody] Review patch)
+        {
+            var result = await _reviewService.PatchReviewAsync(id, patch);
+            if (result != "Review updated successfully.")
+                return BadRequest(new { message = result });
+            return Ok(new { message = result });
+        }
+
     }
 }

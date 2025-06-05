@@ -28,6 +28,17 @@ namespace SHMS.Controllers
         {
             return Ok(_userService.GetAllUsers());
         }
+        [HttpGet("by-role/{role}")]
+        //[Authorize(Roles = "admin,manager")]
+        public ActionResult<IEnumerable<User>> GetUsersByRole(string role)
+        {
+            var users = _userService.GetUsersByRole(role);
+            if (!users.Any())
+            {
+                return NotFound($"No users found with role '{role}'.");
+            }
+            return Ok(users);
+        }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
@@ -132,5 +143,14 @@ namespace SHMS.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUser(int id, [FromBody] User patch)
+        {
+            var result = await _userService.PatchUserAsync(id, patch);
+            if (result != "User updated successfully.")
+                return BadRequest(new { message = result });
+            return Ok(new { message = result });
+        }
+
     }
 }

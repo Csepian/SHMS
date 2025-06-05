@@ -112,6 +112,14 @@ namespace SHMS.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchBooking(int id, [FromBody] Booking patch)
+        {
+            var result = await _bookingService.PatchBookingAsync(id, patch);
+            if (result != "Booking updated successfully.")
+                return BadRequest(new { message = result });
+            return Ok(new { message = result });
+        }
 
 
         // PUT: api/Bookings/5
