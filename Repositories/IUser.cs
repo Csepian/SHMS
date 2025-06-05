@@ -12,5 +12,8 @@ namespace SHMS.Repositories
         Task DeleteUserAsync(int id);
         Task AssignManagerToHotel(int hotelId, int managerId);
         bool UserExists(int id);
+        IEnumerable<User> GetUsersByRole(string role);
+        Task<string> PatchUserAsync(int id, User patch);
+
     }
 }

@@ -191,6 +191,15 @@ namespace SHMS.Controllers
 
             return Ok(hotels);
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchHotel(int id, [FromBody] HotelDTO patch)
+        {
+            var result = await _hotelservice.PatchHotelAsync(id, patch);
+            if (result != "Hotel updated successfully.")
+                return BadRequest(new { message = result });
+            return Ok(new { message = result });
+        }
+
 
     }
 }

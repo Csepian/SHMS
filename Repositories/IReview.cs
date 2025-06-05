@@ -10,5 +10,7 @@ namespace SHMS.Repositories
         Task AddReviewAsync(Review review);
         Task UpdateReviewAsync(Review review);
         Task DeleteReviewAsync(int id);
+        Task<string> PatchReviewAsync(int id, Review patch);
+
     }
 }

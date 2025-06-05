@@ -75,5 +75,18 @@ namespace SHMS.Services
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<string> PatchReviewAsync(int id, Review patch)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return "Review not found.";
+
+            if (patch.Rating != default) review.Rating = patch.Rating;
+            if (!string.IsNullOrEmpty(patch.Comment)) review.Comment = patch.Comment;
+            // Add more fields as needed
+
+            await _context.SaveChangesAsync();
+            return "Review updated successfully.";
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SHMS.Data;
+using SHMS.DTOs;
 using SHMS.Model;
 using SHMS.Repositories;
 
@@ -116,5 +117,20 @@ namespace SHMS.Services
                 .Include(h => h.Reviews)
                 .FirstOrDefault(a => a.Name == name);
         }
+        public async Task<string> PatchHotelAsync(int id, HotelDTO patch)
+        {
+            var hotel = await _context.Hotels.FindAsync(id);
+            if (hotel == null) return "Hotel not found.";
+
+            if (!string.IsNullOrEmpty(patch.Name)) hotel.Name = patch.Name;
+            if (!string.IsNullOrEmpty(patch.Location)) hotel.Location = patch.Location;
+            if (patch.ManagerID.HasValue) hotel.ManagerID = patch.ManagerID;
+            if (!string.IsNullOrEmpty(patch.Amenities)) hotel.Amenities = patch.Amenities;
+            // Add more fields as needed
+
+            await _context.SaveChangesAsync();
+            return "Hotel updated successfully.";
+        }
+
     }
 }
