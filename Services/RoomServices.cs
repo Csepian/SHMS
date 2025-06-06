@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SHMS.Data;
+using SHMS.DTO;
 using SHMS.Model;
 using SHMS.Repositories;
 
@@ -111,7 +112,7 @@ namespace SHMS.Services
                 )
                 .ToListAsync();
         }
-        public async Task<string> PatchRoomAsync(int id, Room patch)
+        public async Task<string> PatchRoomAsync(int id, RoomDTO patch)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null) return "Room not found.";

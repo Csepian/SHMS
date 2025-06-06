@@ -142,7 +142,7 @@ namespace SHMS.Controllers
             return Ok(availableRooms);
         }
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchRoom(int id, [FromBody] Room patch)
+        public async Task<IActionResult> PatchRoom(int id, [FromBody] RoomDTO patch)
         {
             var result = await _roomService.PatchRoomAsync(id, patch);
             if (result != "Room updated successfully.")
