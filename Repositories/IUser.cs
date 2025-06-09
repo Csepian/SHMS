@@ -1,4 +1,5 @@
-﻿using SHMS.Model;
+﻿using SHMS.DTO;
+using SHMS.Model;
 
 namespace SHMS.Repositories
 {
@@ -13,7 +14,7 @@ namespace SHMS.Repositories
         Task AssignManagerToHotel(int hotelId, int managerId);
         bool UserExists(int id);
         IEnumerable<User> GetUsersByRole(string role);
-        Task<string> PatchUserAsync(int id, User patch);
+        Task<string> PatchUserAsync(int id, NameEmailContactNumber_patch patch);
 
     }
 }

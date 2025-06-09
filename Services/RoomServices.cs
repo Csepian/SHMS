@@ -102,7 +102,7 @@ namespace SHMS.Services
                 .Where(r => r.HotelID == hotelId && r.Availability &&
                     !_context.Bookings.Any(b =>
                         b.RoomID == r.RoomID &&
-                        b.Status != "Cancelled" && // Only consider non-cancelled bookings
+                        b.Status != "cancelled" && // Only consider non-cancelled bookings
                         (
                             (checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) ||
                             (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) ||
