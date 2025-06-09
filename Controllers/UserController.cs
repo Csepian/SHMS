@@ -144,7 +144,7 @@ namespace SHMS.Controllers
             }
         }
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchUser(int id, [FromBody] User patch)
+        public async Task<IActionResult> PatchUser(int id, [FromBody] NameEmailContactNumber_patch patch)
         {
             var result = await _userService.PatchUserAsync(id, patch);
             if (result != "User updated successfully.")

@@ -98,15 +98,23 @@ namespace SHMS.Services
 
         public async Task DeleteBookingAsync(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
-     
+            var booking = await _context.Bookings
+                .Include(b => b.Room)
+                .FirstOrDefaultAsync(b => b.BookingID == id);
+
             if (booking != null)
             {
+                if (booking.Room != null)
+                {
+                    booking.Room.Availability = true;
+                    _context.Entry(booking.Room).State = EntityState.Modified;
+                }
                 _context.Bookings.Remove(booking);
                 await _context.SaveChangesAsync();
             }
-            
         }
+
+
 
         public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)
         {
@@ -144,7 +152,11 @@ namespace SHMS.Services
                     return "You can't cancel booking within 24 hours of check-in date. Please contact hotel manager";
 
                 booking.Status = "Cancelled";
-                booking.Room.Availability = true;
+                if (booking.Room != null)
+                {
+                    booking.Room.Availability = true;
+                    _context.Entry(booking.Room).State = EntityState.Modified;
+                }
 
                 await _context.SaveChangesAsync();
                 return "Booking cancelled successfully.";

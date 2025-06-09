@@ -49,38 +49,46 @@ namespace SHMS.Services  // handles bussiness logic
         // process new payment check condition
         public async Task<string> AddPaymentAsync(Payment payment)
         {
-            var booking = await _context.Bookings
-                .Include(b => b.Room)
-                .FirstOrDefaultAsync(b => b.BookingID == payment.BookingID); //fetch booking detail
-
-            //check payment amount and room price same or not then status shuffle
-            if (payment.Amount != booking.Room.Price)  
-
+            try
             {
-                throw new InvalidOperationException($"Payment amount must match the room price. Expected: {booking.Room.Price}, Received: {payment.Amount}");
-            }
-            else
-            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Room)
+                    .FirstOrDefaultAsync(b => b.BookingID == payment.BookingID); //fetch booking detail
 
-            // Check if payment status is "Done" and update booking status
+                if (booking == null || booking.Room == null)
+                {
+                    return "Booking or associated room not found.";
+                }
 
-                payment.Status = true; //payment sucess then status set true 
+
+
+                payment.Status = true; // payment success
                 booking.Room.Availability = false;
                 _context.Entry(booking.Room).State = EntityState.Modified;
+
+                await _context.Payments.AddAsync(payment);
+                await _context.SaveChangesAsync();
+
+                // update booking status on successful payment
+                if (payment.Status)
+                {
+                    await UpdateBookingStatusAsync(payment.BookingID, "Confirmed");
+                }
+
+                return "Payment Successful";
             }
-
-            await _context.Payments.AddAsync(payment);
-            await _context.SaveChangesAsync();
-
-            // update booking status on successful payment
-
-            if (payment.Status)
+            catch (InvalidOperationException ex)
             {
-                await UpdateBookingStatusAsync(payment.BookingID, "Confirmed");
+                // Return the specific error message
+                return ex.Message;
             }
-            return "Payment Successful";
-
+            catch (Exception ex)
+            {
+                // Log ex if needed
+                return "An error occurred while processing the payment.";
+            }
         }
+
 
         // update payment sucess then confirmed status
         public async Task UpdatePaymentAsync(Payment payment)
