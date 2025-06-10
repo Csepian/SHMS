@@ -12,8 +12,8 @@ using SHMS.Data;
 namespace SHMS.Migrations
 {
     [DbContext(typeof(SHMSContext))]
-    [Migration("20250508123523_first change")]
-    partial class firstchange
+    [Migration("20250609104625_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -99,7 +99,7 @@ namespace SHMS.Services
 
             return await _context.Rooms
                 .Include(r => r.Hotel)
-                .Where(r => r.HotelID == hotelId && r.Availability &&
+                .Where(r => r.HotelID == hotelId  &&
                     !_context.Bookings.Any(b =>
                         b.RoomID == r.RoomID &&
                         b.Status != "cancelled" && // Only consider non-cancelled bookings

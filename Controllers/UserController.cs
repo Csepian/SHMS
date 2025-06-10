@@ -42,7 +42,7 @@ namespace SHMS.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin,manager,guest")]
+        //[Authorize(Roles = "admin,manager,guest")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
             var user = _userService.GetUserById(id);
@@ -53,7 +53,7 @@ namespace SHMS.Controllers
             return Ok(user);
         }
         [HttpGet("by-hotel-name/{hotelName}")]
-        [Authorize(Roles = "admin,manager")]
+        //[Authorize(Roles = "admin,manager")]
         public ActionResult<IEnumerable<User>> GetUsersByHotelName(string hotelName)
         {
             var users = _userService.GetUsersByHotel(hotelName);
@@ -90,7 +90,7 @@ namespace SHMS.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin,manager,guest")]
+        //[Authorize(Roles = "admin,manager,guest")]
         public async Task<IActionResult> PutUser(int id, UserDTO userdto)
         {
             if (!ModelState.IsValid)
@@ -121,8 +121,8 @@ namespace SHMS.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteUser(int id, User user)
+       
+        public async Task<IActionResult> DeleteUser(int id)
         {
 
             await _userService.DeleteUserAsync(id);
@@ -130,7 +130,7 @@ namespace SHMS.Controllers
 
         }
         [HttpPost("assign-manager")]
-        [Authorize(Roles = "admin")]
+     
         public async Task<IActionResult> AssignManagerToHotel(int hotelId, int managerId)
         {
             try
